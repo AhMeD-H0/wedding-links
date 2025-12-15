@@ -2,17 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Open App</title>
+  <title>Redirecting...</title>
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const userId = params.get("id");
-    if(userId) {
-      // deep link يفتح التطبيق مباشرة
+    // نقرأ الـ id من الرابط
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get('id');
+
+    if (userId) {
+      // نعمل redirect للـ deep link
       window.location.href = `wedding_app://profile/${userId}`;
+    } else {
+      // لو ما فيش id، نقدر نعمل رسالة أو redirect للصفحة الرئيسية
+      document.write("Invalid link or ID missing.");
     }
   </script>
 </head>
 <body>
-  <p>فتح التطبيق...</p>
+  <p>Redirecting to the app...</p>
 </body>
 </html>
