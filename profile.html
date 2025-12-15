@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Opening app...</title>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    if (id) {
+      // حاول تفتح التطبيق
+      window.location.href = "wedding_app://profile/" + id;
+
+      // لو التطبيق مش موجود
+      setTimeout(() => {
+        document.body.innerHTML =
+          "<h2>⚠️ التطبيق غير مثبت</h2><p>نزّل التطبيق الأول</p>";
+      }, 1500);
+    }
+  </script>
+</head>
+<body>
+  <p>جاري فتح التطبيق...</p>
+</body>
+</html>
