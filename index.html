@@ -1,50 +1,82 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>فتح بروفايل تطبيق الزفاف</title>
+    <title>افتح التطبيق</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
     <style>
         body {
             font-family: sans-serif;
             text-align: center;
-            padding: 20px;
             background-color: #f4f4f4;
             color: #333;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            max-width: 90%;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        #openAppButton {
+            display: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            background-color: #4CAF50; /* لون التوجيه */
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: background-color 0.3s;
+        }
+        #openAppButton:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <p id="status">جاري محاولة فتح تطبيق الزفاف على صفحة البروفايل...</p>
-        <p style="font-size: 0.9em; color: #666;">إذا لم يفتح التطبيق تلقائياً، يرجى التأكد من تثبيته.</p>
+        <p id="status">جاري إعداد رابط البروفايل...</p>
+        
+        <a id="openAppButton" href="#">افتح التطبيق الآن</a>
+        
+        <p style="font-size: 0.8em; color: #666; margin-top: 15px;">يجب عليك النقر على الزر أعلاه لإكمال التوجيه.</p>
     </div>
 
     <script type="text/javascript">
         const params = new URLSearchParams(window.location.search);
         const userId = params.get('id');
+        const statusElement = document.getElementById('status');
+        const button = document.getElementById('openAppButton');
 
         if (userId) {
             const deepLink = `wedding_app://profile?id=${userId}`;
+            
+            // 1. إعداد الزر لعرضه فورا بعد تحميل الصفحة
+            statusElement.textContent = 'الرابط جاهز للفتح.';
+            button.style.display = 'inline-block';
+            button.href = deepLink; // وضع الـ Deep Link كـ href للزر
 
-            // 1. محاولة كسر العلاقة بالرابط الحالي باستخدام Scheme موثوق (مثل tel:)
-            // هذا التوجيه لن يتم بالضرورة، لكنه قد يهيئ المتصفح للتعامل مع Scheme مطلق.
-            window.location.replace("tel:"); 
-
-            // 2. إطلاق الـ Deep Link بعد فترة تأخير بسيطة (1ms) لضمان كسر العلاقة
-            setTimeout(function() {
-                window.location.replace(deepLink);
-            }, 1); 
-
-            // 3. التوجيه الاحتياطي للمتجر (في حالة عدم فتح التطبيق)
+            // 2. التوجيه الاحتياطي للمتجر بعد 5 ثوانٍ (إذا لم ينقر المستخدم)
             setTimeout(function () {
-                document.getElementById('status').textContent = 'التطبيق غير مثبت أو فشل التوجيه. جاري التوجيه إلى المتجر...';
-                // 👇 ضع رابط متجر التطبيقات هنا
-                window.location.replace('https://play.google.com/store/apps/details?id=YOUR_APP_PACKAGE_NAME'); 
-            }, 500);
+                if (document.getElementById('openAppButton').style.display !== 'none') {
+                     statusElement.textContent = 'فشل الفتح التلقائي. جاري التوجيه إلى المتجر...';
+                     document.getElementById('openAppButton').style.display = 'none';
+                     // 👇 ضع رابط متجر التطبيقات هنا
+                     window.location.href = 'https://play.google.com/store/apps/details?id=YOUR_APP_PACKAGE_NAME'; 
+                }
+            }, 5000); 
 
         } else {
-             document.getElementById('status').textContent = 'خطأ: لم يتم تحديد مُعرّف المستخدم.';
+             statusElement.textContent = 'خطأ: لم يتم تحديد مُعرّف المستخدم في الرابط.';
         }
     </script>
 </body>
