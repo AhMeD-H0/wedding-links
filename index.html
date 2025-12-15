@@ -21,24 +21,29 @@
     </div>
 
     <script type="text/javascript">
-        // 1. استخراج الـ User ID
         const params = new URLSearchParams(window.location.search);
         const userId = params.get('id');
 
         if (userId) {
-            // 2. بناء الـ Deep Link
-            const deepLink = `wedding_app://profile?id=${userId}`; 
+            const deepLink = `wedding_app://profile?id=${userId}`;
 
-            // 3. التوجيه باستخدام replace لمنع المشاكل التاريخية للمتصفحات
-            // (غالباً ما يكون replace أفضل من href للتوجيه عبر بروتوكول مختلف)
-            window.location.replace(deepLink);
+            // 1. تغيير URL المتصفح أولاً إلى صفحة فارغة.
+            // هذا يكسر العلاقة بين المتصفح ورابط GitHub Pages.
+            window.location.replace("about:blank"); 
 
-            // 4. التوجيه الاحتياطي للمتجر
+            // 2. إطلاق الـ Deep Link من الصفحة النظيفة (يتم التنفيذ فورًا تقريبًا)
+            // نستخدم setTimeout (بصفر) لضمان أن الأمر يتم بعد تغيير الصفحة
+            setTimeout(function() {
+                window.location.replace(deepLink);
+            }, 0);
+
+            // 3. التوجيه الاحتياطي للمتجر (في حالة عدم فتح التطبيق)
             setTimeout(function () {
-                document.getElementById('status').textContent = 'التطبيق غير مثبت أو فشل التوجيه. جاري التوجيه إلى المتجر...';
+                // نغير حالة النص لتعرف أن التوجيه فشل
+                document.body.innerHTML = '<p>التطبيق غير مثبت أو فشل التوجيه. جاري التوجيه إلى المتجر...</p>';
                 // 👇 ضع رابط متجر التطبيقات هنا
                 window.location.replace('https://play.google.com/store/apps/details?id=YOUR_APP_PACKAGE_NAME'); 
-            }, 500);
+            }, 500); // 500ms كافية لمعرفة ما إذا كان التطبيق سيفتح
 
         } else {
              document.getElementById('status').textContent = 'خطأ: لم يتم تحديد مُعرّف المستخدم.';
