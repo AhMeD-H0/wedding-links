@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+  <script>
+    // نقرأ الـ id من الرابط
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get('id');
+
+    if (userId) {
+      // نعمل redirect للـ deep link
+      window.location.href = `wedding_app://profile/${userId}`;
+    } else {
+      // لو ما فيش id، نقدر نعمل رسالة أو redirect للصفحة الرئيسية
+      document.write("Invalid link or ID missing.");
+    }
+  </script>
+</head>
+<body>
+  <p>Redirecting to the app...</p>
+</body>
+</html>
