@@ -1,92 +1,33 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>افتح التطبيق</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
+  <meta charset="UTF-8">
+  <title>Redirect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        body {
-            font-family: sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 6px 12px rgba(0,0,0,.15);
-        }
-
-        #openAppButton {
-            display: none;
-            margin-top: 25px;
-            padding: 15px;
-            width: 100%;
-            font-size: 18px;
-            border: none;
-            border-radius: 8px;
-            background: #4CAF50;
-            color: white;
-            cursor: pointer;
-        }
-
-        #openAppButton:hover {
-            background: #43a047;
-        }
-
-        .hint {
-            margin-top: 15px;
-            font-size: 13px;
-            color: #777;
-        }
-    </style>
-</head>
-
-<body>
-<div class="container">
-    <p id="status">جاري تجهيز رابط البروفايل…</p>
-
-    <button id="openAppButton">افتح التطبيق</button>
-
-    <p class="hint">لو التطبيق مش متسطب هيتحول تلقائيًا للمتجر</p>
-</div>
-
-<script>
+  <script>
     const params = new URLSearchParams(window.location.search);
     const userId = params.get('id');
 
-    const statusText = document.getElementById('status');
-    const openButton = document.getElementById('openAppButton');
+    if (userId) {
+      const deepLink = `wedding_app://profile/${userId}`;
 
-    if (!userId) {
-        statusText.textContent = '❌ رابط غير صالح';
-    } else {
-        const deepLink = `wedding_app://profile/${userId}`;
+      // redirect فوري
+      window.location.replace(deepLink);
 
-        statusText.textContent = 'الرابط جاهز';
-        openButton.style.display = 'block';
-
-        openButton.onclick = () => {
-            window.location.href = deepLink;
-        };
-
-        // fallback للمتجر
-        setTimeout(() => {
-            window.location.href =
-              'https://play.google.com/store/apps/details?id=YOUR_APP_PACKAGE_NAME';
-        }, 5000);
+      // fallback للمتجر
+      setTimeout(() => {
+        window.location.replace(
+          'https://play.google.com/store/apps/details?id=YOUR_APP_PACKAGE_NAME'
+        );
+      }, 2500);
     }
-</script>
+  </script>
+</head>
+
+<body>
+  <p style="text-align:center;margin-top:40px">
+    جاري فتح التطبيق…
+  </p>
 </body>
 </html>
