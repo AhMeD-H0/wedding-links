@@ -2,33 +2,71 @@
 <html>
 <head>
     <title>فتح بروفايل تطبيق الزفاف</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .status-message {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p class="status-message" id="status">جاري محاولة فتح تطبيق الزفاف على صفحة البروفايل...</p>
+        <p style="font-size: 0.9em; color: #666;">إذا لم يفتح التطبيق تلقائياً، يرجى التأكد من تثبيته.</p>
+    </div>
+
     <script type="text/javascript">
-        // 1. استخراج الـ User ID من رابط المتصفح
+        // 1. استخراج الـ User ID
         const params = new URLSearchParams(window.location.search);
         const userId = params.get('id');
 
-        // إذا لم يكن هناك مُعرّف للمستخدم، نتوقف.
-        if (!userId) {
-            // هنا يمكنك توجيههم لصفحة الخطأ أو الصفحة الرئيسية
-            document.getElementById('status').textContent = 'لم يتم تحديد مُعرّف المستخدم.';
-        } else {
-            // 2. بناء الـ Deep Link المخصص
-            const deepLink = `wedding_app://profile?id=${userId}`;
+        if (userId) {
+            // 2. بناء الـ Deep Link
+            const deepLink = `wedding_app://profile?id=${userId}`; 
 
-            // 3. محاولة فتح التطبيق مباشرةً
-            window.location.href = deepLink;
+            // دالة التنفيذ الأساسية
+            function attemptDeepLink() {
+                // الطريقة 1: التوجيه المباشر (الأسرع والأحدث)
+                window.location.href = deepLink;
+
+                // الطريقة 2: استخدام الـ iframe للتحايل على قيود المتصفحات القديمة (احتياطي)
+                /*
+                let iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.src = deepLink;
+                document.body.appendChild(iframe);
+                */
+            }
             
-            // 4. إذا لم يفتح التطبيق خلال 500ms (بسبب عدم التثبيت)، توجيه المستخدم للمتجر
+            attemptDeepLink();
+
+            // 3. التوجيه إلى المتجر كخيار احتياطي إذا لم يتم فتح التطبيق بعد 500ms
             setTimeout(function () {
-                // يمكنك وضع رابط Google Play أو App Store هنا
-                document.getElementById('status').textContent = 'التطبيق لم يفتح. يتم توجيهك إلى متجر التطبيقات...';
-                window.location.href = 'https://play.google.com/store/apps/details?id=com.yourcompany.wedding_app'; 
+                document.getElementById('status').textContent = 'التطبيق غير مثبت أو فشل التوجيه. جاري التوجيه إلى المتجر...';
+                // 👇 ضع رابط متجر التطبيقات هنا
+                window.location.href = 'https://play.google.com/store/apps/details?id=YOUR_APP_PACKAGE_NAME'; 
             }, 500);
+
+        } else {
+             document.getElementById('status').textContent = 'خطأ: لم يتم تحديد مُعرّف المستخدم.';
         }
     </script>
-</head>
-<body>
-    <p id="status">جاري محاولة فتح تطبيق الزفاف على صفحة البروفايل...</p>
-    <p>إذا لم يفتح التطبيق، يرجى التأكد من تثبيته.</p>
 </body>
 </html>
