@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Redirect</title>
+  <title>Open App تجربه80</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <script>
@@ -10,21 +10,19 @@
     const userId = params.get('id');
 
     if (userId) {
-      const deepLink = `wedding_app://profile/${userId}`;
+      const intentLink =
+        `intent://profile/${userId}#Intent;scheme=wedding_app;package=com.example.wedding_app;end`;
 
-      // redirect فوري
-      window.location.replace(deepLink);
+      window.location.href = intentLink;
 
-      // fallback للمتجر
+      // fallback
       setTimeout(() => {
-        window.location.replace(
-          'https://play.google.com/store/apps/details?id=YOUR_APP_PACKAGE_NAME'
-        );
-      }, 2500);
+        window.location.href =
+          "https://play.google.com/store/apps/details?id=com.example.wedding_app";
+      }, 2000);
     }
   </script>
 </head>
-
 <body>
   <p style="text-align:center;margin-top:40px">
     جاري فتح التطبيق…
