@@ -1,23 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Redirecting...</title>
-  <script>
-    // نقرأ الـ id من الرابط
-    const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get('id');
+    <title>فتح بروفايل تطبيق الزفاف</title>
+    <script type="text/javascript">
+        // 1. استخراج الـ User ID من رابط المتصفح
+        const params = new URLSearchParams(window.location.search);
+        const userId = params.get('id');
 
-    if (userId) {
-      // نعمل redirect للـ deep link
-      window.location.href = `wedding_app://profile/${userId}`;
-    } else {
-      // لو ما فيش id، نقدر نعمل رسالة أو redirect للصفحة الرئيسية
-      document.write("Invalid link or ID missing.");
-    }
-  </script>
+        // إذا لم يكن هناك مُعرّف للمستخدم، نتوقف.
+        if (!userId) {
+            // هنا يمكنك توجيههم لصفحة الخطأ أو الصفحة الرئيسية
+            document.getElementById('status').textContent = 'لم يتم تحديد مُعرّف المستخدم.';
+        } else {
+            // 2. بناء الـ Deep Link المخصص
+            const deepLink = `wedding_app://profile?id=${userId}`;
+
+            // 3. محاولة فتح التطبيق مباشرةً
+            window.location.href = deepLink;
+            
+            // 4. إذا لم يفتح التطبيق خلال 500ms (بسبب عدم التثبيت)، توجيه المستخدم للمتجر
+            setTimeout(function () {
+                // يمكنك وضع رابط Google Play أو App Store هنا
+                document.getElementById('status').textContent = 'التطبيق لم يفتح. يتم توجيهك إلى متجر التطبيقات...';
+                window.location.href = 'https://play.google.com/store/apps/details?id=com.yourcompany.wedding_app'; 
+            }, 500);
+        }
+    </script>
 </head>
 <body>
-  <p>Redirecting to the app...</p>
+    <p id="status">جاري محاولة فتح تطبيق الزفاف على صفحة البروفايل...</p>
+    <p>إذا لم يفتح التطبيق، يرجى التأكد من تثبيته.</p>
 </body>
 </html>
